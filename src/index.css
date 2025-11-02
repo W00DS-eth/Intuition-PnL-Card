@@ -24,10 +24,14 @@ a:hover {
 
 body {
   margin: 0;
-  display: flex;
-  place-items: center;
-  min-width: 320px;
-  min-height: 100vh;
+  padding: 0;
+  background-image: url("./assets/page-bg.png");
+  background-size: cover;          /* make sure it fills the screen */
+  background-position: center;     /* center the image */
+  background-repeat: no-repeat;    /* prevent tiling */
+  background-attachment: fixed;    /* keep it steady while scrolling */
+  font-family: sans-serif;
+  color: white;
 }
 
 h1 {
