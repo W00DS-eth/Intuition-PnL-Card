@@ -13,7 +13,6 @@ function App() {
     ownership: "22.34%",
   });
 
-  // ref to the REAL, unscaled card (for download/copy)
   const exportRef = useRef(null);
 
   function handleChange(e) {
@@ -70,12 +69,12 @@ function App() {
         flexDirection: "row",
         justifyContent: "center",
         alignItems: "center",
-        backgroundColor: "#000",
+        // 👇 was "#000"
+        backgroundColor: "transparent",
         color: "#fff",
         fontFamily: "sans-serif",
         width: "100vw",
-        height: "100vh",
-        overflow: "hidden",
+        minHeight: "100vh", // let page grow if needed
         gap: "50px",
         padding: "20px",
         boxSizing: "border-box",
@@ -90,13 +89,14 @@ function App() {
           maxWidth: "300px",
           width: "100%",
           padding: "20px",
-          background: "rgba(20,20,20,0.6)",
+          // keep this so text is readable on top of image 👇
+          background: "rgba(0,0,0,0.6)",
           borderRadius: "10px",
+          backdropFilter: "blur(4px)",
         }}
       >
         <h2 style={{ color: "#45FF80", marginBottom: "6px" }}>Create Card</h2>
 
-        {/* inputs */}
         <label style={{ fontSize: 14 }}>
           Title:
           <input
@@ -187,7 +187,7 @@ function App() {
         </button>
       </div>
 
-      {/* RIGHT PANEL: visible, normal card (can be scaled later) */}
+      {/* RIGHT PANEL */}
       <div
         style={{
           flexShrink: 0,

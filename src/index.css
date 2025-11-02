@@ -23,15 +23,14 @@ a:hover {
 }
 
 body {
-  margin: 0;
-  padding: 0;
+   margin: 0;
+  min-height: 100vh;
   background-image: url("./assets/page-bg.png");
-  background-size: cover;          /* make sure it fills the screen */
-  background-position: center;     /* center the image */
-  background-repeat: no-repeat;    /* prevent tiling */
-  background-attachment: fixed;    /* keep it steady while scrolling */
+  background-size: cover;         /* fills any screen */
+  background-position: center;    /* centers it */
+  background-repeat: no-repeat;
+  background-attachment: fixed;   /* nice parallax-y feel */
   font-family: sans-serif;
-  color: white;
 }
 
 h1 {
