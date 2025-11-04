@@ -1,65 +1,79 @@
-import { useRef, useState } from "react";
+import { useRef, useState, useEffect } from "react";
 import Card from "./components/Card.jsx";
 import ResponsiveCard from "./components/ResponsiveCard.jsx";
 import * as htmlToImage from "html-to-image";
 
-function App() {
+function formatNumber(n, digits = 2) {
+  const v = Number(n);
+  if (!isFinite(v)) return "";
+  return v.toLocaleString(undefined, {
+    minimumFractionDigits: digits,
+    maximumFractionDigits: digits,
+  });
+}
+function formatSigned(n, digits = 2) {
+  const v = Number(n);
+  if (!isFinite(v)) return "";
+  const sign = v > 0 ? "+" : v < 0 ? "" : "";
+  return sign + formatNumber(v, digits);
+}
+function computeDerived(currentValue, totalBought) {
+  const cv = parseFloat(currentValue);
+  const tb = parseFloat(totalBought);
+  if (!isFinite(cv) || !isFinite(tb)) return { pnl: "", percentageChange: "" };
+
+  const pnl = cv - tb;
+  const pct = tb === 0 ? 0 : (pnl / tb) * 100;
+
+  return {
+    pnl: formatSigned(pnl, 2),
+    percentageChange: formatSigned(pct, 2) + "%",
+  };
+}
+
+export default function App() {
   const [form, setForm] = useState({
     title: "Oddsgibs intuition use case",
-    pnl: "+107.25",
-    currentValue: "204.35",
-    totalBought: "97.1",
-    shares: "5.06",
-    ownership: "22.34%",
+    currentValue: "299.97",
+    totalBought: "17.10",
+    pnl: "+0.00",
+    percentageChange: "+0.00%",
   });
 
-  const exportRef = useRef(null);
+  useEffect(() => {
+    const { pnl, percentageChange } = computeDerived(
+      form.currentValue,
+      form.totalBought
+    );
+    setForm((f) => ({ ...f, pnl, percentageChange }));
+  }, [form.currentValue, form.totalBought]);
 
   function handleChange(e) {
-    setForm({
-      ...form,
-      [e.target.name]: e.target.value,
-    });
+    const { name, value } = e.target;
+    setForm((f) => ({ ...f, [name]: value }));
   }
+
+  const exportRef = useRef(null);
 
   async function handleDownload() {
     const node = exportRef.current;
     if (!node) return;
-
-    try {
-      const dataUrl = await htmlToImage.toPng(node, {
-        pixelRatio: 2,
-      });
-      const link = document.createElement("a");
-      link.download = "intuition-card.png";
-      link.href = dataUrl;
-      link.click();
-    } catch (err) {
-      console.error("download failed", err);
-    }
+    const dataUrl = await htmlToImage.toPng(node, { pixelRatio: 2 });
+    const link = document.createElement("a");
+    link.download = "intuition-card.png";
+    link.href = dataUrl;
+    link.click();
   }
 
   async function handleCopy() {
     const node = exportRef.current;
     if (!node) return;
-
-    try {
-      const blob = await htmlToImage.toBlob(node, {
-        pixelRatio: 2,
-      });
-      if (!blob) return;
-
-      await navigator.clipboard.write([
-        new ClipboardItem({
-          "image/png": blob,
-        }),
-      ]);
-
-      alert("Card copied to clipboard! Paste it into Twitter/X.");
-    } catch (err) {
-      console.error("copy failed", err);
-      alert("Copy failed in this browser — try Download PNG instead.");
-    }
+    const blob = await htmlToImage.toBlob(node, { pixelRatio: 2 });
+    if (!blob) return;
+    await navigator.clipboard.write([
+      new ClipboardItem({ "image/png": blob }),
+    ]);
+    alert("Card copied to clipboard! Paste it into Twitter/X.");
   }
 
   return (
@@ -69,18 +83,16 @@ function App() {
         flexDirection: "row",
         justifyContent: "center",
         alignItems: "center",
-        // 👇 was "#000"
-        backgroundColor: "transparent",
         color: "#fff",
         fontFamily: "sans-serif",
         width: "100vw",
-        minHeight: "100vh", // let page grow if needed
+        minHeight: "100vh",
         gap: "50px",
         padding: "20px",
         boxSizing: "border-box",
       }}
     >
-      {/* LEFT PANEL: FORM + BUTTONS */}
+      {/* LEFT PANEL */}
       <div
         style={{
           display: "flex",
@@ -89,13 +101,20 @@ function App() {
           maxWidth: "300px",
           width: "100%",
           padding: "20px",
-          // keep this so text is readable on top of image 👇
           background: "rgba(0,0,0,0.6)",
           borderRadius: "10px",
           backdropFilter: "blur(4px)",
         }}
       >
-        <h2 style={{ color: "#45FF80", marginBottom: "6px" }}>Create Card</h2>
+        <h2
+          style={{
+            color: "#fff",
+          marginBottom: "6px",
+          textShadow: "0 0 6px rgba(69, 255, 128, 0.6)",
+        }}
+      >
+        Flex your $TRUST
+      </h2>
 
         <label style={{ fontSize: 14 }}>
           Title:
@@ -108,21 +127,12 @@ function App() {
         </label>
 
         <label style={{ fontSize: 14 }}>
-          PnL:
-          <input
-            name="pnl"
-            value={form.pnl}
-            onChange={handleChange}
-            style={inputStyle}
-          />
-        </label>
-
-        <label style={{ fontSize: 14 }}>
           Current Value:
           <input
             name="currentValue"
             value={form.currentValue}
             onChange={handleChange}
+            inputMode="decimal"
             style={inputStyle}
           />
         </label>
@@ -133,56 +143,20 @@ function App() {
             name="totalBought"
             value={form.totalBought}
             onChange={handleChange}
+            inputMode="decimal"
             style={inputStyle}
           />
         </label>
 
-        <label style={{ fontSize: 14 }}>
-          Shares:
-          <input
-            name="shares"
-            value={form.shares}
-            onChange={handleChange}
-            style={inputStyle}
-          />
-        </label>
+        <div style={{ fontSize: 12, color: "#bbb" }}>
+          PnL and % change are calculated automatically.
+        </div>
 
-        <label style={{ fontSize: 14 }}>
-          Ownership:
-          <input
-            name="ownership"
-            value={form.ownership}
-            onChange={handleChange}
-            style={inputStyle}
-          />
-        </label>
-
-        <button
-          onClick={handleDownload}
-          style={{
-            marginTop: "10px",
-            background: "#45FF80",
-            border: "none",
-            padding: "8px 10px",
-            borderRadius: "6px",
-            fontWeight: 600,
-            cursor: "pointer",
-          }}
-        >
+        <button className="btn btn-primary" onClick={handleDownload}>
           Download PNG
         </button>
 
-        <button
-          onClick={handleCopy}
-          style={{
-            background: "#ffffff11",
-            border: "1px solid #45FF80",
-            padding: "8px 10px",
-            borderRadius: "6px",
-            fontWeight: 600,
-            cursor: "pointer",
-          }}
-        >
+        <button className="btn btn-secondary" onClick={handleCopy}>
           Copy Image
         </button>
       </div>
@@ -199,7 +173,7 @@ function App() {
         <ResponsiveCard data={form} />
       </div>
 
-      {/* HIDDEN real-size card for exporting */}
+      {/* HIDDEN EXPORT */}
       <div
         style={{
           position: "fixed",
@@ -222,11 +196,9 @@ const inputStyle = {
   padding: "8px",
   marginTop: "4px",
   marginBottom: "6px",
-  borderRadius: "4px",
+  borderRadius: "6px",
   border: "1px solid #333",
   backgroundColor: "#111",
   color: "#fff",
   fontSize: "14px",
 };
-
-export default App;

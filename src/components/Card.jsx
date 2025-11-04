@@ -3,12 +3,19 @@ import logo from "../assets/logo.png";
 
 export default function Card({
   title = "Oddsgibs intuition use case",
-  pnl = "+107.25",
-  currentValue = "204.35",
-  totalBought = "97.1",
-  shares = "5.06",
-  ownership = "22.34%",
+  pnl = "+0.00",
+  percentageChange = "+0.00%",
+  currentValue = "",
+  totalBought = "",
 }) {
+  // parse numeric values to determine color
+  const pnlNum = parseFloat(String(pnl).replace(/[+,]/g, ""));
+  const pctNum = parseFloat(String(percentageChange).replace(/[+,%]/g, ""));
+  const green = "#45FF80";
+  const red = "#FF4D4D";
+  const pnlColor = isFinite(pnlNum) && pnlNum < 0 ? red : green;
+  const pctColor = isFinite(pctNum) && pctNum < 0 ? red : green;
+
   return (
     <div
       style={{
@@ -23,7 +30,7 @@ export default function Card({
         overflow: "hidden",
       }}
     >
-      {/* LOGO (png) */}
+      {/* LOGO */}
       <img
         src={logo}
         alt="Logo"
@@ -49,214 +56,180 @@ export default function Card({
           fontSize: 18,
           lineHeight: "18px",
           color: "#D0D0D0",
-          letterSpacing: "0em",
           textTransform: "uppercase",
         }}
       >
         Support Position
       </div>
 
-      {/* ITEM TITLE (dynamic) */}
+      {/* ITEM TITLE */}
       <div
         style={{
           position: "absolute",
           left: 50,
           top: 116,
           width: 244,
-          height: 23,
           fontWeight: 400,
           fontSize: 18,
-          lineHeight: "18px",
+          lineHeight: "22px",
           color: "#FFFFFF",
           textAlign: "left",
+          whiteSpace: "normal",
+          wordWrap: "break-word",
+          overflow: "hidden",
+          maxHeight: "60px",
         }}
       >
         {title}
       </div>
 
-      {/* BIG PNL (dynamic) */}
+      {/* BIG PNL */}
       <div
         style={{
           position: "absolute",
           left: 50,
           top: 160,
           width: 170,
-          height: 29,
+          height: 46,
           fontWeight: 700,
           fontSize: 46,
           lineHeight: "46px",
-          color: "#45FF80",
-          letterSpacing: "0.03em",
+          color: pnlColor,
+          letterSpacing: "0em",
         }}
       >
         {pnl}
       </div>
 
-      {/* $TRUST (PnL) LABEL */}
+      {/* % CHANGE */}
+      <div
+        style={{
+          position: "absolute",
+          left: 215,
+          top: 185,
+          width: 90,
+          height: 23,
+          fontWeight: 400,
+          fontSize: 16,
+          lineHeight: "18px",
+          color: pctColor,
+          textAlign: "right",
+        }}
+      >
+        {percentageChange}
+      </div>
+
+      {/* $TRUST (PnL) */}
       <div
         style={{
           position: "absolute",
           left: 50,
           top: 205,
-          width: 1250,
+          width: 125,
           height: 23,
           fontWeight: 400,
           fontSize: 18,
           lineHeight: "18px",
           color: "#FFFFFF",
-          letterSpacing: "0em",
           textTransform: "uppercase",
         }}
       >
         $TRUST (PnL)
       </div>
 
-      {/* CURRENT VALUE (label) */}
+      {/* ---- DATA ROWS ---- */}
+
+      {/* TOTAL BOUGHT */}
       <div
         style={{
           position: "absolute",
           left: 50,
           top: 245,
-          width: 1510,
-          height: 23,
+          width: 160,
           fontWeight: 400,
           fontSize: 18,
-          lineHeight: "18px",
           color: "#AAAAAA",
-          letterSpacing: "0em",
-          textTransform: "uppercase",
-        }}
-      >
-        Current Value
-      </div>
-
-      {/* CURRENT VALUE (value) */}
-      <div
-        style={{
-          position: "absolute",
-          left: 238,
-          top: 246,
-          width: 62,
-          height: 23,
-          fontWeight: 400,
-          fontSize: 18,
-          lineHeight: "18px",
-          color: "#FFFFFF",
-          textAlign: "right",
-        }}
-      >
-        {currentValue}
-      </div>
-
-      {/* TOTAL BOUGHT (label) */}
-      <div
-        style={{
-          position: "absolute",
-          left: 50,
-          top: 278,
-          width: 1420,
-          height: 23,
-          fontWeight: 400,
-          fontSize: 18,
-          lineHeight: "18px",
-          color: "#AAAAAA",
-          letterSpacing: "0em",
           textTransform: "uppercase",
         }}
       >
         Total Bought
       </div>
-
-      {/* TOTAL BOUGHT (value) */}
       <div
         style={{
           position: "absolute",
-          left: 260,
-          top: 278,
-          width: 40,
-          height: 23,
+          right: 50, // anchor numerics to right edge
+          top: 245,
+          width: 90,
+          textAlign: "right",
           fontWeight: 400,
           fontSize: 18,
-          lineHeight: "18px",
           color: "#FFFFFF",
-          textAlign: "right",
+          overflow: "hidden",
         }}
       >
         {totalBought}
       </div>
 
-      {/* SHARES (label) */}
+      {/* CURRENT VALUE */}
+      <div
+        style={{
+          position: "absolute",
+          left: 50,
+          top: 278,
+          width: 160,
+          fontWeight: 400,
+          fontSize: 18,
+          color: "#AAAAAA",
+          textTransform: "uppercase",
+        }}
+      >
+        Current Value
+      </div>
+      <div
+        style={{
+          position: "absolute",
+          right: 50, // same right-edge alignment
+          top: 278,
+          width: 90,
+          textAlign: "right",
+          fontWeight: 400,
+          fontSize: 18,
+          color: "#FFFFFF",
+          overflow: "hidden",
+        }}
+      >
+        {currentValue}
+      </div>
+
+      {/* TOTAL PROFIT */}
       <div
         style={{
           position: "absolute",
           left: 50,
           top: 314,
-          width: 74,
-          height: 23,
+          width: 160,
           fontWeight: 400,
           fontSize: 18,
-          lineHeight: "18px",
           color: "#AAAAAA",
-          letterSpacing: "0em",
           textTransform: "uppercase",
         }}
       >
-        Shares
+        Total Profit
       </div>
-
-      {/* SHARES (value) */}
       <div
         style={{
           position: "absolute",
-          left: 260,
+          right: 50, // perfect vertical alignment of last digits
           top: 314,
-          width: 40,
-          height: 23,
-          fontWeight: 400,
-          fontSize: 18,
-          lineHeight: "18px",
-          color: "#FFFFFF",
+          width: 90,
           textAlign: "right",
-        }}
-      >
-        {shares}
-      </div>
-
-      {/* OWNERSHIP (label) */}
-      <div
-        style={{
-          position: "absolute",
-          left: 50,
-          top: 351,
-          width: 114,
-          height: 23,
           fontWeight: 400,
           fontSize: 18,
-          lineHeight: "18px",
-          color: "#AAAAAA",
-          letterSpacing: "0em",
-          textTransform: "uppercase",
+          color: pnlColor,
+          overflow: "hidden",
         }}
       >
-        Ownership
-      </div>
-
-      {/* OWNERSHIP (value) */}
-      <div
-        style={{
-          position: "absolute",
-          left: 230,
-          top: 351,
-          width: 70,
-          height: 23,
-          fontWeight: 400,
-          fontSize: 18,
-          lineHeight: "18px",
-          color: "#FFFFFF",
-          textAlign: "right",
-        }}
-      >
-        {ownership}
+        {pnl}
       </div>
 
       {/* FOOTER */}
@@ -271,7 +244,6 @@ export default function Card({
           fontSize: 18,
           lineHeight: "18px",
           color: "#FFFFFF",
-          letterSpacing: "0em",
           textTransform: "uppercase",
           textAlign: "left",
         }}
