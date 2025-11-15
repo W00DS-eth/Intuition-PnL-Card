@@ -23,13 +23,13 @@ a:hover {
 }
 
 body {
-   margin: 0;
+  margin: 0;
   min-height: 100vh;
   background-image: url("./assets/page-bg.png");
-  background-size: cover;         /* fills any screen */
-  background-position: center;    /* centers it */
+  background-size: cover;
+  background-position: center;
   background-repeat: no-repeat;
-  background-attachment: fixed;   /* nice parallax-y feel */
+  background-attachment: fixed;
   font-family: sans-serif;
 }
 
@@ -127,3 +127,121 @@ button:focus-visible {
   box-shadow: 0 0 10px rgba(170, 170, 170, 0.25);
 }
 
+/* ---------- DESKTOP-FIRST RESPONSIVE LAYOUT ---------- */
+
+/* DEFAULT: Desktop layout (side-by-side) */
+.app-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  color: #fff;
+  font-family: sans-serif;
+  width: 100%;
+  min-height: 100vh;
+  gap: 50px;
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+/* Controls panel */
+.controls-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  max-width: 350px;
+  width: 100%;
+  padding: 20px;
+  background: rgba(0, 0, 0, 0.6);
+  border-radius: 10px;
+  backdrop-filter: blur(4px);
+  box-sizing: border-box;
+}
+
+.panel-title {
+  color: #fff;
+  margin-bottom: 6px;
+  text-shadow: 0 0 6px rgba(69, 255, 128, 0.6);
+  font-size: 1.5rem;
+  margin-top: 0;
+}
+
+.input-label {
+  font-size: 14px;
+  display: flex;
+  flex-direction: column;
+}
+
+.input-field {
+  width: 100%;
+  padding: 8px;
+  margin-top: 4px;
+  margin-bottom: 6px;
+  border-radius: 6px;
+  border: 1px solid #333;
+  background-color: #111;
+  color: #fff;
+  font-size: 14px;
+  box-sizing: border-box;
+}
+
+.info-text {
+  font-size: 12px;
+  color: #bbb;
+}
+
+/* Card preview container */
+.card-preview {
+  flex-shrink: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Hidden export container */
+.export-container {
+  position: fixed;
+  top: -9999px;
+  left: -9999px;
+  width: 347px;
+  height: 419px;
+}
+
+/* TABLETS: Switch to vertical layout */
+@media (max-width: 900px) {
+  .app-container {
+    flex-direction: column;
+    gap: 30px;
+  }
+
+  .controls-panel {
+    max-width: 400px;
+  }
+}
+
+/* MOBILE: Optimize for small screens */
+@media (max-width: 768px) {
+  .app-container {
+    gap: 20px;
+    padding: 15px;
+  }
+
+  .controls-panel {
+    padding: 15px;
+  }
+
+  .panel-title {
+    font-size: 1.3rem;
+  }
+}
+
+/* VERY SMALL SCREENS: Scale down card */
+@media (max-width: 400px) {
+  .app-container {
+    padding: 10px;
+  }
+
+  .controls-panel {
+    padding: 12px;
+  }
+}

@@ -77,78 +77,44 @@ export default function App() {
   }
 
   return (
-    <div
-      style={{
-        display: "flex",
-        flexDirection: "row",
-        justifyContent: "center",
-        alignItems: "center",
-        color: "#fff",
-        fontFamily: "sans-serif",
-        width: "100vw",
-        minHeight: "100vh",
-        gap: "50px",
-        padding: "20px",
-        boxSizing: "border-box",
-      }}
-    >
+    <div className="app-container">
       {/* LEFT PANEL */}
-      <div
-        style={{
-          display: "flex",
-          flexDirection: "column",
-          gap: "10px",
-          maxWidth: "300px",
-          width: "100%",
-          padding: "20px",
-          background: "rgba(0,0,0,0.6)",
-          borderRadius: "10px",
-          backdropFilter: "blur(4px)",
-        }}
-      >
-        <h2
-          style={{
-            color: "#fff",
-          marginBottom: "6px",
-          textShadow: "0 0 6px rgba(69, 255, 128, 0.6)",
-        }}
-      >
-        Flex your $TRUST
-      </h2>
+      <div className="controls-panel">
+        <h2 className="panel-title">Flex your $TRUST</h2>
 
-        <label style={{ fontSize: 14 }}>
+        <label className="input-label">
           Title:
           <input
             name="title"
             value={form.title}
             onChange={handleChange}
-            style={inputStyle}
+            className="input-field"
           />
         </label>
 
-        <label style={{ fontSize: 14 }}>
+        <label className="input-label">
           Current Value:
           <input
             name="currentValue"
             value={form.currentValue}
             onChange={handleChange}
             inputMode="decimal"
-            style={inputStyle}
+            className="input-field"
           />
         </label>
 
-        <label style={{ fontSize: 14 }}>
+        <label className="input-label">
           Total Bought:
           <input
             name="totalBought"
             value={form.totalBought}
             onChange={handleChange}
             inputMode="decimal"
-            style={inputStyle}
+            className="input-field"
           />
         </label>
 
-        <div style={{ fontSize: 12, color: "#bbb" }}>
+        <div className="info-text">
           PnL and % change are calculated automatically.
         </div>
 
@@ -162,27 +128,12 @@ export default function App() {
       </div>
 
       {/* RIGHT PANEL */}
-      <div
-        style={{
-          flexShrink: 0,
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-        }}
-      >
+      <div className="card-preview">
         <ResponsiveCard data={form} />
       </div>
 
       {/* HIDDEN EXPORT */}
-      <div
-        style={{
-          position: "fixed",
-          top: -9999,
-          left: -9999,
-          width: 347,
-          height: 419,
-        }}
-      >
+      <div className="export-container">
         <div ref={exportRef}>
           <Card {...form} />
         </div>
@@ -190,15 +141,3 @@ export default function App() {
     </div>
   );
 }
-
-const inputStyle = {
-  width: "100%",
-  padding: "8px",
-  marginTop: "4px",
-  marginBottom: "6px",
-  borderRadius: "6px",
-  border: "1px solid #333",
-  backgroundColor: "#111",
-  color: "#fff",
-  fontSize: "14px",
-};
