@@ -381,6 +381,107 @@ button:focus-visible {
 
 /* ---------- Responsive Design ---------- */
 
+/* Token label styling */
+.token-label {
+  font-size: 0.75em;
+  color: #45FF80;
+  font-weight: normal;
+  display: block;
+}
+
+/* Mobile card view styles */
+.positions-cards {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.position-card {
+  background: #1a1a1a;
+  border: 1px solid #333;
+  border-radius: 12px;
+  padding: 16px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+.position-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 16px;
+  gap: 12px;
+}
+
+.position-card-name {
+  font-size: 1.1rem;
+  margin: 0;
+  color: #fff;
+  flex: 1;
+}
+
+.position-card-change {
+  font-weight: 600;
+  font-size: 1rem;
+  padding: 4px 8px;
+  border-radius: 6px;
+  white-space: nowrap;
+}
+
+.position-card-change.positive {
+  color: #45FF80;
+  background: rgba(69, 255, 128, 0.1);
+}
+
+.position-card-change.negative {
+  color: #ff4757;
+  background: rgba(255, 71, 87, 0.1);
+}
+
+.position-card-stats {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.stat {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.stat-label {
+  color: #999;
+  font-size: 0.9rem;
+}
+
+.stat-value {
+  color: #fff;
+  font-weight: 600;
+  font-size: 1rem;
+}
+
+.stat-value.positive {
+  color: #45FF80;
+}
+
+.stat-value.negative {
+  color: #ff4757;
+}
+
+.btn-full-width {
+  width: 100%;
+}
+
+/* Show/hide based on screen size */
+.desktop-only {
+  display: block;
+}
+
+.mobile-only {
+  display: none;
+}
+
 @media (max-width: 1024px) {
   .card-generator {
     flex-direction: column;
@@ -406,6 +507,15 @@ button:focus-visible {
     min-width: 100%;
   }
 
+  /* Switch to card view on mobile */
+  .desktop-only {
+    display: none;
+  }
+
+  .mobile-only {
+    display: flex;
+  }
+
   .positions-table {
     font-size: 14px;
   }
@@ -428,5 +538,13 @@ button:focus-visible {
   .btn-small {
     font-size: 11px;
     padding: 4px 8px;
+  }
+
+  .position-card {
+    padding: 12px;
+  }
+
+  .position-card-name {
+    font-size: 1rem;
   }
 }
