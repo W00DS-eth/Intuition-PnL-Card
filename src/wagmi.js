@@ -1,18 +1,15 @@
 import { http, createConfig } from 'wagmi'
 import { intuition } from './chains'
 import { injected, walletConnect, coinbaseWallet } from 'wagmi/connectors'
+import { getDefaultConfig } from '@rainbow-me/rainbowkit'
 
-// WalletConnect project ID - you'll need to get one from https://cloud.walletconnect.com/
-const projectId = 'c11efb958ed18b31bffb22db236f7c48' // Replace this!
+// WalletConnect project ID - Get your own at https://cloud.walletconnect.com/
+// Replace with your real project ID!
+const projectId = 'c11efb958ed18b31bffb22db236f7c48' // REPLACE THIS
 
-export const config = createConfig({
+export const config = getDefaultConfig({
+  appName: 'Intuition PnL Card',
+  projectId: projectId,
   chains: [intuition],
-  connectors: [
-    injected(), // MetaMask, Rabby, etc.
-    walletConnect({ projectId }), // WalletConnect for mobile wallets
-    coinbaseWallet({ appName: 'Intuition PnL Card' }), // Coinbase Wallet
-  ],
-  transports: {
-    [intuition.id]: http('https://rpc.intuition.systems'),
-  },
+  ssr: false, // Not using server-side rendering
 })
