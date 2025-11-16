@@ -11,8 +11,12 @@ export const graphqlClient = new GraphQLClient(INTUITION_API_URL, {
 
 // GraphQL Query using ACTUAL schema fields
 export const GET_USER_POSITIONS = `
-  query GetUserPositions($userAddress: String!) {
-    positions(where: { account_id: { _eq: $userAddress } }) {
+  query GetUserPositions($userAddress: String!, $limit: Int!, $offset: Int!) {
+    positions(
+      where: { account_id: { _eq: $userAddress } }
+      limit: $limit
+      offset: $offset
+    ) {
       id
       account {
         id
@@ -42,6 +46,9 @@ export const GET_USER_POSITIONS = `
           }
         }
       }
+      vault {
+        current_share_price
+      }
     }
   }
 `
@@ -58,15 +65,37 @@ export const GET_ATOMS = `
   }
 `
 
-// Helper function to query user positions
+// Helper function to query user positions (fetches ALL positions)
 export async function getUserPositions(userAddress) {
   try {
     console.log('Fetching positions for:', userAddress)
-    const data = await graphqlClient.request(GET_USER_POSITIONS, {
-      userAddress: userAddress,
-    })
-    console.log('API Response:', data)
-    return data.positions || []
+    
+    let allPositions = []
+    let offset = 0
+    const limit = 100 // Fetch 100 at a time
+    let hasMore = true
+    
+    // Keep fetching until we get all positions
+    while (hasMore) {
+      const data = await graphqlClient.request(GET_USER_POSITIONS, {
+        userAddress: userAddress,
+        limit: limit,
+        offset: offset,
+      })
+      
+      const positions = data.positions || []
+      allPositions = allPositions.concat(positions)
+      
+      // If we got fewer than the limit, we've fetched everything
+      if (positions.length < limit) {
+        hasMore = false
+      } else {
+        offset += limit
+      }
+    }
+    
+    console.log(`Fetched ${allPositions.length} total positions`)
+    return allPositions
   } catch (error) {
     console.error('Error fetching user positions:', error)
     console.error('Error details:', error.response?.errors || error.message)
@@ -103,9 +132,18 @@ export function formatPositionData(position) {
 
   // Calculate values (convert from wei to TRUST by dividing by 10^18)
   // Note: Intuition uses TRUST token, which has 18 decimals like ETH
-  const invested = parseFloat(position.shares || 0) / 1e18
-  const currentValue = parseFloat(position.total_deposit_assets_after_total_fees || 0) / 1e18
-  const pnl = currentValue - invested
+  // 
+  // CORRECT LOGIC:
+  // - Invested (Total Bought) = total_deposit_assets_after_total_fees
+  // - Current Value = shares × vault.current_share_price
+  // - PnL = Current Value - Invested
+  
+  const invested = parseFloat(position.total_deposit_assets_after_total_fees || 0) / 1e18
+  const shares = parseFloat(position.shares || 0) / 1e18
+  const sharePrice = parseFloat(position.vault?.current_share_price || 0) / 1e18
+  
+  const currentValue = shares * sharePrice
+  const pnl = currentValue - invested  
   const percentageChange = invested > 0 ? ((pnl / invested) * 100) : 0
 
   return {
