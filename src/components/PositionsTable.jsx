@@ -112,7 +112,8 @@ export default function PositionsTable({ address, onGenerateCard }) {
         </div>
       </div>
 
-      <div className="positions-table-wrapper">
+      {/* Desktop Table View */}
+      <div className="positions-table-wrapper desktop-only">
         <table className="positions-table">
           <thead>
             <tr>
@@ -120,11 +121,18 @@ export default function PositionsTable({ address, onGenerateCard }) {
                 Position {sortBy === 'name' && (sortOrder === 'asc' ? '↑' : '↓')}
               </th>
               <th onClick={() => handleSort('invested')} className="sortable">
-                Invested {sortBy === 'invested' && (sortOrder === 'asc' ? '↑' : '↓')}
+                Invested<br/>
+                <span className="token-label">($TRUST)</span>
+                {sortBy === 'invested' && (sortOrder === 'asc' ? ' ↑' : ' ↓')}
               </th>
-              <th>Current Value</th>
+              <th>
+                Current Value<br/>
+                <span className="token-label">($TRUST)</span>
+              </th>
               <th onClick={() => handleSort('pnl')} className="sortable">
-                PnL {sortBy === 'pnl' && (sortOrder === 'asc' ? '↑' : '↓')}
+                PnL<br/>
+                <span className="token-label">($TRUST)</span>
+                {sortBy === 'pnl' && (sortOrder === 'asc' ? ' ↑' : ' ↓')}
               </th>
               <th>% Change</th>
               <th></th>
@@ -133,9 +141,22 @@ export default function PositionsTable({ address, onGenerateCard }) {
           <tbody>
             {sortedPositions.map((position) => (
               <tr key={position.id}>
-                <td className="position-name">{position.name}</td>
-                <td>${position.invested}</td>
-                <td>${position.currentValue}</td>
+                <td className="position-name">
+                  {position.portalUrl ? (
+                    <a 
+                      href={position.portalUrl} 
+                      target="_blank" 
+                      rel="noopener noreferrer"
+                      className="position-link"
+                    >
+                      {position.name}
+                    </a>
+                  ) : (
+                    position.name
+                  )}
+                </td>
+                <td>{position.invested}</td>
+                <td>{position.currentValue}</td>
                 <td className={position.rawPnl >= 0 ? 'pnl-positive' : 'pnl-negative'}>
                   {position.pnl}
                 </td>
@@ -154,6 +175,57 @@ export default function PositionsTable({ address, onGenerateCard }) {
             ))}
           </tbody>
         </table>
+      </div>
+
+      {/* Mobile Card View */}
+      <div className="positions-cards mobile-only">
+        {sortedPositions.map((position) => (
+          <div key={position.id} className="position-card">
+            <div className="position-card-header">
+              <h3 className="position-card-name">
+                {position.portalUrl ? (
+                  <a 
+                    href={position.portalUrl} 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="position-link"
+                  >
+                    {position.name}
+                  </a>
+                ) : (
+                  position.name
+                )}
+              </h3>
+              <div className={`position-card-change ${position.rawPercentage >= 0 ? 'positive' : 'negative'}`}>
+                {position.percentageChange}
+              </div>
+            </div>
+            
+            <div className="position-card-stats">
+              <div className="stat">
+                <span className="stat-label">Invested ($TRUST)</span>
+                <span className="stat-value">{position.invested}</span>
+              </div>
+              <div className="stat">
+                <span className="stat-label">Current Value ($TRUST)</span>
+                <span className="stat-value">{position.currentValue}</span>
+              </div>
+              <div className="stat">
+                <span className="stat-label">PnL ($TRUST)</span>
+                <span className={`stat-value ${position.rawPnl >= 0 ? 'positive' : 'negative'}`}>
+                  {position.pnl}
+                </span>
+              </div>
+            </div>
+
+            <button 
+              onClick={() => onGenerateCard(position)}
+              className="btn btn-primary btn-full-width"
+            >
+              Generate Card
+            </button>
+          </div>
+        ))}
       </div>
     </div>
   )

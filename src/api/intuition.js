@@ -90,6 +90,17 @@ export function formatPositionData(position) {
     return position.term?.id || 'Unknown Position'
   }
 
+  // Generate Intuition portal URL
+  const getPortalUrl = () => {
+    if (position.term?.atom?.term_id) {
+      return `https://portal.intuition.systems/explore/atom/${position.term.atom.term_id}?tab=overview`
+    }
+    if (position.term?.triple?.term_id) {
+      return `https://portal.intuition.systems/explore/triple/${position.term.triple.term_id}?tab=positions`
+    }
+    return null
+  }
+
   // Calculate values (convert from wei to TRUST by dividing by 10^18)
   // Note: Intuition uses TRUST token, which has 18 decimals like ETH
   const invested = parseFloat(position.shares || 0) / 1e18
@@ -100,6 +111,7 @@ export function formatPositionData(position) {
   return {
     id: position.id,
     name: getName(),
+    portalUrl: getPortalUrl(),
     invested: invested.toFixed(4),
     currentValue: currentValue.toFixed(4),
     pnl: pnl >= 0 ? `+${pnl.toFixed(4)}` : pnl.toFixed(4),
@@ -109,6 +121,5 @@ export function formatPositionData(position) {
     rawPnl: pnl,
     rawPercentage: percentageChange,
     term: position.term,
-    vault: position.vault,
   }
 }
