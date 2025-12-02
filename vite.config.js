@@ -3,7 +3,7 @@ import react from '@vitejs/plugin-react'
 
 export default defineConfig({
   plugins: [react()],
-  base: '/Intuition-PnL-Card/',
+  base: '/',
   build: {
     rollupOptions: {
       onwarn(warning, warn) {
